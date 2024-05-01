@@ -24,3 +24,19 @@ export const createCard = (req: CustomRequest, res: Response) => {
 export const removeCard = (req: Request, res: Response) => Card.findByIdAndRemove(req.params.id)
   .then((card) => res.send({ data: card }))
   .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+
+export const likeCard = (req: CustomRequest, res: Response) => Card.findByIdAndUpdate(
+  req.params.id,
+  { $addToSet: { likes: req.user?._id } }, // добавить _id в массив, только если его там нет
+  { new: true },
+)
+  .then((card) => res.send({ data: card }))
+  .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+
+export const dislikeCard = (req: CustomRequest, res: Response) => Card.findByIdAndUpdate(
+  req.params.id,
+  { $pull: { likes: req.user?._id } },
+  { new: true },
+)
+  .then((card) => res.send({ data: card }))
+  .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
