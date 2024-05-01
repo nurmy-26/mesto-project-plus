@@ -10,7 +10,6 @@ export const getUser = (req: Request, res: Response) => User.findById(req.params
   .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 
 export const createUser = (req: Request, res: Response) => {
-  console.log(req.body);
   const { name, about, avatar } = req.body;
 
   return User.create({ name, about, avatar })
