@@ -1,10 +1,11 @@
 {
-  "name": "starterkits",
+  "name": "mesto-plus",
   "version": "1.0.0",
   "description": "Бэкенд для проекта Mesto",
   "main": "dist/app.js",
   "scripts": {
     "lint": "npx eslint src/**/*.ts",
+    "lint-fix": "npx eslint src/**/*.ts --fix",
     "build": "tsc",
     "dev": "ts-node-dev src/app.ts",
     "start": "ts-node src/app.ts",

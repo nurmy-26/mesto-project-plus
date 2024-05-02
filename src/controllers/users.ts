@@ -1,48 +1,35 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import { CustomRequest } from '../utils/types';
 import User from '../models/user';
-import { CustomRequest } from 'app';
+import { catchError } from '../utils/helpers';
 
-export const getUsers = (req: Request, res: Response) => User.find({})
-  .then((users) => res.send({ data: users }))
-  .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
-
-export const getUser = (req: Request, res: Response) => User.findById(req.params.id)
-  .then((user) => res.send({ data: user }))
-  .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
-
-export const createUser = (req: Request, res: Response) => {
-  const { name, about, avatar } = req.body;
-
-  return User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+export const getUsers = (req: Request, res: Response, next: NextFunction) => {
+  catchError(User.find({}), res, next);
 };
 
-export const patchUser = (req: CustomRequest, res: Response) => {
-  const { name, about, avatar } = req.body;
-
-  return User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      name,
-      about,
-      avatar,
-    },
-    {
-      new: true,
-      upsert: true,
-    })
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+export const getUser = (req: Request, res: Response, next: NextFunction) => {
+  catchError(User.findById({ _id: req.params.id }), res, next);
 };
 
-export const patchAvatar = (req: CustomRequest, res: Response) => {
+export const createUser = (req: Request, res: Response, next: NextFunction) => {
+  const { name, about, avatar } = req.body;
+  catchError(User.create({ name, about, avatar }), res, next);
+};
+
+export const patchUser = (req: CustomRequest, res: Response, next: NextFunction) => {
+  const { name, about, avatar } = req.body;
+  catchError(
+    User.findByIdAndUpdate(
+      req.user?._id,
+      { name, about, avatar },
+      { new: true, upsert: true },
+    ),
+    res,
+    next,
+  );
+};
+
+export const patchAvatar = (req: CustomRequest, res: Response, next: NextFunction) => {
   const { avatar } = req.body;
-
-  return User.findByIdAndUpdate(
-    req.user?._id,
-    { avatar },
-    { new: true })
-    .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+  catchError(User.findByIdAndUpdate(req.user?._id, { avatar }, { new: true }), res, next);
 };
