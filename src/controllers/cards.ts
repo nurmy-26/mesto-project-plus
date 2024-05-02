@@ -3,8 +3,10 @@ import { CustomRequest } from '../utils/types';
 import Card from '../models/card';
 import { catchError } from '../utils/helpers';
 
+const fields = ['name', 'link', 'owner', 'likes', 'createdAt', '_id'];
+
 export const getCards = (req: Request, res: Response, next: NextFunction) => {
-  catchError(Card.find({}), res, next);
+  catchError(Card.find({}), res, next, fields);
 };
 
 export const createCard = (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -17,11 +19,12 @@ export const createCard = (req: CustomRequest, res: Response, next: NextFunction
     }),
     res,
     next,
+    fields,
   );
 };
 
 export const removeCard = (req: Request, res: Response, next: NextFunction) => {
-  catchError(Card.findByIdAndRemove({ _id: req.params.id }), res, next);
+  catchError(Card.findByIdAndRemove({ _id: req.params.id }), res, next, fields);
 };
 
 export const likeCard = (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -33,6 +36,7 @@ export const likeCard = (req: CustomRequest, res: Response, next: NextFunction) 
     ),
     res,
     next,
+    fields,
   );
 };
 
@@ -45,5 +49,6 @@ export const dislikeCard = (req: CustomRequest, res: Response, next: NextFunctio
     ),
     res,
     next,
+    fields,
   );
 };
