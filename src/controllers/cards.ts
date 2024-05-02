@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomRequest } from '../utils/types';
+import { constants } from 'http2';
 import Card from '../models/card';
+import { CustomRequest } from '../utils/types';
 import { catchError } from '../utils/helpers';
-
-const fields = ['name', 'link', 'owner', 'likes', 'createdAt', '_id'];
+import { CARD_FIELDS } from '../utils/constants';
 
 export const getCards = (req: Request, res: Response, next: NextFunction) => {
-  catchError(Card.find({}), res, next, fields);
+  catchError(Card.find({}), res, next, CARD_FIELDS);
 };
 
 export const createCard = (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -19,12 +19,13 @@ export const createCard = (req: CustomRequest, res: Response, next: NextFunction
     }),
     res,
     next,
-    fields,
+    CARD_FIELDS,
+    constants.HTTP_STATUS_CREATED,
   );
 };
 
 export const removeCard = (req: Request, res: Response, next: NextFunction) => {
-  catchError(Card.findByIdAndRemove({ _id: req.params.id }), res, next, fields);
+  catchError(Card.findByIdAndRemove({ _id: req.params.id }), res, next, CARD_FIELDS);
 };
 
 export const likeCard = (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -36,7 +37,7 @@ export const likeCard = (req: CustomRequest, res: Response, next: NextFunction) 
     ),
     res,
     next,
-    fields,
+    CARD_FIELDS,
   );
 };
 
@@ -49,6 +50,6 @@ export const dislikeCard = (req: CustomRequest, res: Response, next: NextFunctio
     ),
     res,
     next,
-    fields,
+    CARD_FIELDS,
   );
 };

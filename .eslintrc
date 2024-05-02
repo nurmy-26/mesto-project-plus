@@ -38,6 +38,8 @@
         "ts": "never"
       }
     ],
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": "warn",
     "no-underscore-dangle": [
       "error",
       {

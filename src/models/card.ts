@@ -1,8 +1,5 @@
-import {
-  model,
-  Schema,
-  Types,
-} from 'mongoose';
+import { model, Schema, Types } from 'mongoose';
+import validator from 'validator';
 
 export interface ICard {
   name: string;
@@ -15,13 +12,17 @@ export interface ICard {
 const cardSchema = new Schema<ICard>({
   name: {
     type: String,
-    required: true,
-    minlength: 2,
-    maxlength: 30,
+    required: [true, 'Поле должно быть заполнено'],
+    minlength: [2, 'Минимальная длина поля - 2'],
+    maxlength: [30, 'Максимальная длина поля - 30'],
   },
   link: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено'],
+    validate: {
+      validator: (v: string) => validator.isURL(v),
+      message: 'Некорректный URL',
+    },
   },
   owner: {
     type: Schema.Types.ObjectId,
@@ -36,6 +37,6 @@ const cardSchema = new Schema<ICard>({
     type: Date,
     default: Date.now,
   },
-});
+}, { versionKey: false });
 
 export default model<ICard>('card', cardSchema);

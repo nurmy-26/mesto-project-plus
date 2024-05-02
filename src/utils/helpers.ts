@@ -1,6 +1,8 @@
 import { NextFunction, Response } from 'express';
 import { Query } from 'mongoose';
+import { constants } from 'http2';
 import NotFoundError from '../errors/not-found-err';
+import { ERR_MESSAGE } from './constants';
 
 // вернет объект, оставив в нем только нужные поля
 const filterItem = (item: any, fields: string[]) => {
@@ -12,9 +14,13 @@ const filterItem = (item: any, fields: string[]) => {
 };
 
 // универсальные ф-и для обработки запросов контроллеров
-export const sendResponse = (res: Response, fields: string[]) => (data: any) => {
+export const sendResponse = (
+  res: Response,
+  fields: string[],
+  status: number = constants.HTTP_STATUS_OK,
+) => (data: any) => {
   if (!data) {
-    throw new NotFoundError('Запрашиваемый ресурс не найден');
+    throw new NotFoundError(ERR_MESSAGE.RESOURCE_NOT_FOUND);
   }
   // для хранения отфильтрованных данных
   let responseData: any;
@@ -26,7 +32,7 @@ export const sendResponse = (res: Response, fields: string[]) => (data: any) => 
     responseData = filterItem(data, fields);
   }
 
-  res.send(responseData);
+  res.status(status).send(responseData);
 };
 
 export const catchError = (
@@ -34,11 +40,26 @@ export const catchError = (
   res: Response,
   next: NextFunction,
   fields: string[],
+  status?: number,
 ) => {
-  const answer = sendResponse(res, fields);
+  const answer = sendResponse(res, fields, status);
   const promise = action instanceof Query ? action.exec() : action;
 
   return promise.then(answer).catch((error) => {
     next(error); // передаем ошибку обработчику ошибок через next
   });
+};
+
+// ф-я для получения всех ошибок валидации
+export const extractErrorMessages = (error: any) => {
+  if (!error || !error.errors) {
+    return '';
+  }
+
+  const errorMessages = Object.keys(error.errors).map((fieldName) => {
+    const { message } = error.errors[fieldName];
+    return `<${fieldName}>: ${message}`;
+  });
+  // возвращаем строку, соединив все сообщения об ошибках через разделитель
+  return errorMessages.join('; ');
 };
