@@ -59,14 +59,12 @@ userSchema.static('findUserByCredentials', function findUserByCredentials(email:
     // если не нашли пользователя по email
     if (!user) {
       throw new UnauthorizedError(ERR_MESSAGE.INVALID_AUTH);
-      // return Promise.reject(new UnauthorizedError(ERR_MESSAGE.INVALID_AUTH));
     }
 
     return bcrypt.compare(password, user.password).then((matched) => {
       // если не подошел пароль
       if (!matched) {
         throw new UnauthorizedError(ERR_MESSAGE.INVALID_AUTH);
-        // return Promise.reject(new UnauthorizedError(ERR_MESSAGE.INVALID_AUTH));
       }
 
       return user;

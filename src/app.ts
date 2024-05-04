@@ -4,6 +4,7 @@ import { celebrate, errors } from 'celebrate';
 import usersRouter from './routes/users';
 import cardsRouter from './routes/cards';
 import handleNotFound from './errors/not-found-handle';
+import { requestLogger, errorLogger } from './middlewares/logger';
 import bodyParser from './middlewares/body-parser';
 import auth from './middlewares/auth';
 import errorHandler from './middlewares/error-handler';
@@ -15,6 +16,8 @@ const { PORT, MONGO_URL = '' } = process.env;
 const app = express();
 bodyParser(app);
 
+app.use(requestLogger); // логер запросов
+
 app.post('/signup', celebrate({ body: fullUserSchema }), createUser);
 app.post('/signin', celebrate({ body: loginSchema }), login);
 
@@ -24,6 +27,7 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 app.use('*', handleNotFound);
 
+app.use(errorLogger); // логер ошибок
 app.use(errors()); // обработчик ошибок celebrate
 app.use(errorHandler); // централизованный обработчик ошибок
 

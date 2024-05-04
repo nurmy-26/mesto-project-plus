@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import { constants } from 'http2';
 
-// не забыть удалить везде CustomRequest и хардкод после реализации авторизации
 export interface CustomRequest extends Request {
   user?: { _id: string };
 }
