@@ -1,5 +1,6 @@
 import { constants } from 'http2';
 
+// 404
 class NotFoundError extends Error {
   statusCode: number;
 

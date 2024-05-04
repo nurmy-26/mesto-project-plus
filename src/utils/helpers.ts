@@ -14,7 +14,7 @@ const filterItem = (item: any, fields: string[]) => {
 };
 
 // универсальные ф-и для обработки запросов контроллеров
-export const sendResponse = (
+const sendResponse = (
   res: Response,
   fields: string[],
   status: number = constants.HTTP_STATUS_OK,
@@ -62,4 +62,8 @@ export const extractErrorMessages = (error: any) => {
   });
   // возвращаем строку, соединив все сообщения об ошибках через разделитель
   return errorMessages.join('; ');
+};
+
+export const extractBearerToken = (header: string) => {
+  return header.replace('Bearer ', '');
 };
