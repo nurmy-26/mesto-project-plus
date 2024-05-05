@@ -2,13 +2,17 @@ import Joi from 'joi';
 
 // схема для параметра id
 export const idParamSchema = Joi.object({
-  id: Joi.string().hex().length(24).required()
+  id: Joi.string().hex().length(24).required(),
 });
 
 // базовая схема пользователя
 export const baseUserSchema = Joi.object({
   name: Joi.string().min(2).max(30),
   about: Joi.string().min(2).max(200),
+});
+
+// схема для patchAvatar
+export const avatarSchema = Joi.object({
   avatar: Joi.string().uri().required(),
 });
 
@@ -18,13 +22,8 @@ export const loginSchema = Joi.object({
   password: Joi.string().min(4).required(),
 });
 
-// полная схема пользователя для createUser
-export const fullUserSchema = baseUserSchema.concat(loginSchema);
-
-// схема для patchAvatar
-export const avatarSchema = Joi.object({
-  avatar: Joi.string().uri().required()
-});
+// схема для регистрации
+export const signupSchema = loginSchema.unknown(true);
 
 // базовая схема карточки
 export const baseCardSchema = Joi.object({

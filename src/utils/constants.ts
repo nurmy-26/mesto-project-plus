@@ -1,4 +1,11 @@
 /* eslint-disable no-unused-vars */
+export enum ENV_EXAMPLE {
+  PORT = 3000,
+  MONGO_URL = 'mongodb://127.0.0.1:27017/mestodb',
+  SALT_ROUNDS = '10',
+  SECRET_KEY = 'defaultKey',
+}
+
 export enum ERR_MESSAGE {
   INVALID_DATA = 'Переданы некорректные данные',
   SERVER_ERROR = 'На сервере произошла ошибка',

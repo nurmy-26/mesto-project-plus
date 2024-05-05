@@ -1,4 +1,6 @@
-import { model, Model, Schema, Document } from 'mongoose';
+import {
+  model, Model, Schema, Document,
+} from 'mongoose';
 import bcrypt from 'bcrypt';
 import validator from 'validator';
 import UnauthorizedError from '../errors/unauthorized-err';
@@ -13,6 +15,7 @@ export interface IUser {
 }
 
 interface UserModel extends Model<IUser> {
+  // eslint-disable-next-line no-unused-vars
   findUserByCredentials: (email: string, password: string) => Promise<Document<unknown, any, IUser>>
 }
 

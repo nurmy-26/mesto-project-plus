@@ -5,8 +5,8 @@ import {
   getAuthUser,
 } from '../controllers/users';
 import {
-  avatarSchema, baseUserSchema, idParamSchema
-} from '../models/joi-validations';
+  avatarSchema, baseUserSchema, idParamSchema,
+} from '../utils/joi-validations';
 
 const router = Router();
 

@@ -4,8 +4,8 @@ import {
   createCard, dislikeCard, getCards, likeCard, removeCard,
 } from '../controllers/cards';
 import {
-  baseCardSchema, idParamSchema
-} from '../models/joi-validations';
+  baseCardSchema, idParamSchema,
+} from '../utils/joi-validations';
 
 const router = Router();
 

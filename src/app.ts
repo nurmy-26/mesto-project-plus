@@ -1,24 +1,27 @@
 import 'dotenv/config';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import { celebrate, errors } from 'celebrate';
-import usersRouter from './routes/users';
-import cardsRouter from './routes/cards';
-import handleNotFound from './errors/not-found-handle';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import bodyParser from './middlewares/body-parser';
 import auth from './middlewares/auth';
 import errorHandler from './middlewares/error-handler';
+import handleNotFound from './errors/not-found-handle';
+import { ENV_EXAMPLE } from './utils/constants';
+import { signupSchema, loginSchema } from './utils/joi-validations';
 import connect from './database/connect';
-import { fullUserSchema, loginSchema } from './models/joi-validations';
+import usersRouter from './routes/users';
+import cardsRouter from './routes/cards';
 import { createUser, login } from './controllers/users';
 
-const { PORT, MONGO_URL = '' } = process.env;
+const { PORT = ENV_EXAMPLE.PORT, MONGO_URL = ENV_EXAMPLE.MONGO_URL } = process.env;
 const app = express();
 bodyParser(app);
+app.use(cookieParser());
 
 app.use(requestLogger); // логер запросов
 
-app.post('/signup', celebrate({ body: fullUserSchema }), createUser);
+app.post('/signup', celebrate({ body: signupSchema }), createUser);
 app.post('/signin', celebrate({ body: loginSchema }), login);
 
 app.use(auth); // все роуты ниже защищены авторизацией (требуют заголовка Authorization с токеном)

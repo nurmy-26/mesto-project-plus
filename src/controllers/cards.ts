@@ -28,7 +28,7 @@ export const createCard = (req: CustomRequest, res: Response, next: NextFunction
 
 export const removeCard = (req: CustomRequest, res: Response, next: NextFunction) => {
   Card.findById(req.params.id)
-    .then(card => {
+    .then((card) => {
       if (!card) {
         throw new NotFoundError(ERR_MESSAGE.RESOURCE_NOT_FOUND);
       } else if (card.owner.toString() !== req.user?._id.toString()) {

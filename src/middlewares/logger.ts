@@ -25,7 +25,7 @@ const errorTransport = new winston.transports.DailyRotateFile({
 // логер запросов
 export const requestLogger = expressWinston.logger({
   transports: [
-    requestTransport
+    requestTransport,
   ],
   format: winston.format.json(),
 });
@@ -33,7 +33,7 @@ export const requestLogger = expressWinston.logger({
 // логер ошибок
 export const errorLogger = expressWinston.errorLogger({
   transports: [
-    errorTransport
+    errorTransport,
   ],
   format: winston.format.json(),
 });

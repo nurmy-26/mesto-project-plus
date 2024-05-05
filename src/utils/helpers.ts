@@ -64,6 +64,4 @@ export const extractErrorMessages = (error: any) => {
   return errorMessages.join('; ');
 };
 
-export const extractBearerToken = (header: string) => {
-  return header.replace('Bearer ', '');
-};
+export const extractBearerToken = (header: string) => header.replace('Bearer ', '');

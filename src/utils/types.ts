@@ -7,7 +7,9 @@ export interface CustomRequest extends Request {
 
 export class CustomError extends Error {
   statusCode: number;
+
   code?: number;
+
   errors?: any;
 
   constructor(message: string, statusCode?: number) {
