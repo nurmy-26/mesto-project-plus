@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
 import { celebrate, errors } from 'celebrate';
+import limiter from './middlewares/limiter';
 import { requestLogger, errorLogger } from './middlewares/logger';
 import bodyParser from './middlewares/body-parser';
 import auth from './middlewares/auth';
@@ -15,10 +17,13 @@ import cardsRouter from './routes/cards';
 import { createUser, login } from './controllers/users';
 
 const { PORT = ENV_EXAMPLE.PORT, MONGO_URL = ENV_EXAMPLE.MONGO_URL } = process.env;
-const app = express();
-bodyParser(app);
-app.use(cookieParser());
 
+const app = express();
+app.use(helmet()); // мидлвар для повышения безопасности
+app.use(limiter); // мидлвар для ограничения количества запросов
+
+bodyParser(app);
+app.use(cookieParser()); // мидлвар для упрощенного доступа к кукам
 app.use(requestLogger); // логер запросов
 
 app.post('/signup', celebrate({ body: signupSchema }), createUser);

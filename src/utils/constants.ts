@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
 export enum ENV_EXAMPLE {
+  NODE_ENV= 'development',
   PORT = 3000,
   MONGO_URL = 'mongodb://127.0.0.1:27017/mestodb',
   SALT_ROUNDS = '10',
   SECRET_KEY = 'defaultKey',
+  TOKEN_LIFETIME_SECONDS = '604800',
 }
 
 export enum ERR_MESSAGE {

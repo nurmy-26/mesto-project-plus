@@ -9,7 +9,11 @@ import {
 import { CustomRequest } from '../utils/types';
 import { catchError } from '../utils/helpers';
 
-const { SALT_ROUNDS = ENV_EXAMPLE.SALT_ROUNDS, SECRET_KEY = ENV_EXAMPLE.SECRET_KEY } = process.env;
+const {
+  SALT_ROUNDS = ENV_EXAMPLE.SALT_ROUNDS,
+  SECRET_KEY = ENV_EXAMPLE.SECRET_KEY,
+  TOKEN_LIFETIME_SECONDS = ENV_EXAMPLE.TOKEN_LIFETIME_SECONDS,
+} = process.env;
 
 export const getUsers = (req: Request, res: Response, next: NextFunction) => {
   catchError(User.find({}), res, next, USER_FIELDS);
@@ -71,29 +75,22 @@ export const patchAvatar = (req: CustomRequest, res: Response, next: NextFunctio
 
 export const login = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
+  const tokenLifetimeSecs = parseInt(TOKEN_LIFETIME_SECONDS, 10); // приводим к number
 
   return User.findUserByCredentials(email, password)
-    // возвращаем пользователю токен
+    // возвращаем пользователю токен и записываем его в httpOnly куку
     .then((user) => {
-      // вариант для возврата в теле ответа:
-      // res.send({
-      //   token: jwt.sign(
-      //     { _id: user._id },
-      //     SECRET_KEY,
-      //     { expiresIn: '7d' }
-      //   ),
-      // });
-
       const token = jwt.sign(
         { _id: user._id },
         SECRET_KEY,
-        { expiresIn: '7d' },
+        { expiresIn: tokenLifetimeSecs }, // до какого времени токен останется действительным
       );
 
       res.cookie('token', token, {
         httpOnly: true,
+        sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: tokenLifetimeSecs * 1000, // сколько браузеру хранить куку токена
       });
 
       res.status(constants.HTTP_STATUS_OK).send({ message: 'Вход выполнен успешно' });
