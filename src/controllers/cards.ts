@@ -7,8 +7,19 @@ import { CARD_FIELDS, ERR_MESSAGE } from '../utils/constants';
 import NotFoundError from '../errors/not-found-err';
 import ForbiddenError from '../errors/forbidden-err';
 
+// export const getCards = (req: Request, res: Response, next: NextFunction) => {
+//   catchError(Card.find({}), res, next, CARD_FIELDS);
+// };
+// вариант с объектом владельца из другой коллекции вместо строки id
 export const getCards = (req: Request, res: Response, next: NextFunction) => {
-  catchError(Card.find({}), res, next, CARD_FIELDS);
+  catchError(
+    Card.find({})
+      .populate('owner', 'name about avatar _id') // заполняем поле owner соот-м документом user
+      .exec(), // получаем промис
+    res,
+    next,
+    CARD_FIELDS
+  );
 };
 
 export const createCard = (req: CustomRequest, res: Response, next: NextFunction) => {

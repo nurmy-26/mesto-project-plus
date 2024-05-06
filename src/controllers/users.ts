@@ -76,27 +76,27 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
     // возвращаем пользователю токен
     .then((user) => {
       // вариант для возврата в теле ответа:
-      // res.send({
-      //   token: jwt.sign(
-      //     { _id: user._id },
-      //     SECRET_KEY,
-      //     { expiresIn: '7d' }
-      //   ),
-      // });
-
-      const token = jwt.sign(
-        { _id: user._id },
-        SECRET_KEY,
-        { expiresIn: '7d' },
-      );
-
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+      res.status(constants.HTTP_STATUS_OK).send({
+        token: jwt.sign(
+          { _id: user._id },
+          SECRET_KEY,
+          { expiresIn: '7d' }
+        ),
       });
 
-      res.status(constants.HTTP_STATUS_OK).send({ message: 'Вход выполнен успешно' });
+      // const token = jwt.sign(
+      //   { _id: user._id },
+      //   SECRET_KEY,
+      //   { expiresIn: '7d' },
+      // );
+
+      // res.cookie('token', token, {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV === 'production',
+      //   maxAge: 7 * 24 * 60 * 60 * 1000,
+      // });
+
+      // res.status(constants.HTTP_STATUS_OK).send({ message: 'Вход выполнен успешно' });
     })
     .catch(next);
 };

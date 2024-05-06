@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import handleUnauthorized from '../errors/unauthorized-handle';
-// import { extractBearerToken } from '../utils/helpers';
+import { extractBearerToken } from '../utils/helpers';
 import { ENV_EXAMPLE } from '../utils/constants';
 
 const { SECRET_KEY = ENV_EXAMPLE.SECRET_KEY } = process.env;
@@ -12,18 +12,18 @@ interface SessionRequest extends Request {
 
 // eslint-disable-next-line consistent-return
 export default (req: SessionRequest, res: Response, next: NextFunction) => {
-  // вариант через токен в заголовках
+  // вариант через токен в заголовках - придется вбивать вручную 'Authorization': 'Bearer ${token}'
   // проверка на присутствие заголовка авторизации и начинается ли он с Bearer
-  // const { authorization } = req.headers;
-  // if (!authorization || !authorization.startsWith('Bearer ')) {
-  //   return handleUnauthorized(req, res, next);
-  // }
-  // const token = extractBearerToken(authorization); // сюда попадет только token без Bearer
-
-  const token = req.cookies.token || '';
-  if (!token) {
+  const { authorization } = req.headers;
+  if (!authorization || !authorization.startsWith('Bearer ')) {
     return handleUnauthorized(req, res, next);
   }
+  const token = extractBearerToken(authorization); // сюда попадет только token без Bearer
+
+  // const token = req.cookies.token || '';
+  // if (!token) {
+  //   return handleUnauthorized(req, res, next);
+  // }
   let payload;
 
   try {

@@ -17,7 +17,7 @@ import { createUser, login } from './controllers/users';
 const { PORT = ENV_EXAMPLE.PORT, MONGO_URL = ENV_EXAMPLE.MONGO_URL } = process.env;
 const app = express();
 bodyParser(app);
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.use(requestLogger); // логер запросов
 
