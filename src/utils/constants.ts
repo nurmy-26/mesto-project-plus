@@ -12,7 +12,7 @@ export enum ERR_MESSAGE {
   INVALID_DATA = 'Переданы некорректные данные',
   SERVER_ERROR = 'На сервере произошла ошибка',
   RESOURCE_NOT_FOUND = 'Запрашиваемый ресурс не найден',
-  NAME_CONFLICT = 'Попытке создать дубликат уникального поля',
+  NAME_CONFLICT = 'Попытка создать дубликат уникального поля',
   INVALID_AUTH = 'Неправильные почта или пароль',
   UNAUTHORIZED = 'Необходима авторизация',
   STATUS_FORBIDDEN = 'У вас недостаточно прав',
